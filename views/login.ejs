@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f4f6f9;
+      }
+      .auth-card {
+        width: 100%;
+        max-width: 420px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        padding: 2.5rem;
+      }
+      .form-label {
+        font-weight: 500;
+        font-size: 0.9rem;
+      }
+      .error-text {
+        color: #dc3545;
+        font-size: 0.85rem;
+        display: none;
+      }
+      .switch-link {
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="auth-card">
+      <h4 class="text-center mb-4">JobDeck</h4>
+      <h6 class="text-center text-muted mb-4">Login to your account</h6>
+
+      <form id="loginForm" action="/login" method="POST" novalidate>
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          <input type="email" name="email" class="form-control" required />
+          <div class="error-text">Enter a valid email.</div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          <input
+            type="password"
+            name="password"
+            class="form-control"
+            minlength="6"
+            required
+          />
+          <div class="error-text">Password must be at least 6 characters.</div>
+        </div>
+        <button type="submit" class="btn btn-primary w-100 mb-3">Login</button>
+        <div class="text-center switch-link">
+          Don't have an account? <a href="/signup">Sign up</a>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      const loginForm = document.getElementById("loginForm");
+
+      loginForm.addEventListener("submit", (e) => {
+        let valid = true;
+        loginForm
+          .querySelectorAll(".error-text")
+          .forEach((el) => (el.style.display = "none"));
+
+        loginForm.querySelectorAll("input[required]").forEach((input) => {
+          if (!input.checkValidity()) {
+            valid = false;
+            input.parentElement.querySelector(".error-text").style.display =
+              "block";
+          }
+        });
+
+        if (!valid) e.preventDefault();
+      });
+    </script>
+  </body>
+</html>

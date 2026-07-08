@@ -15,6 +15,10 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+//DB-Connection
+const dbConnection = require("./db_connection/db");
+dbConnection();
+
 //Session Setup
 app.use(
   session({
@@ -28,6 +32,36 @@ app.use(
     },
   }),
 );
+
+//Routes
+const loginRoute = require("./routes/Login");
+const signupRoute = require("./routes/Signup");
+
+//Middleware to Check User is in session or not
+const isUserLoggedIn = require("./middlewares/checkUserSession");
+
+app.get("/", (req, res) => {
+  res.redirect("/signup");
+});
+app.get("/dashboard", isUserLoggedIn, (req, res) => {
+  res.render("dashboard");
+  console.log("User id From the Session ----------->", req.session.user);
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      res.json({ message: "problem while logout" });
+    } else {
+      res.clearCookie("connect.sid");
+      res.redirect("/login");
+    }
+  });
+});
+
+//Middleware to redirect to the route
+app.use(loginRoute);
+app.use(signupRoute);
 
 //Server
 app.listen(3000, () => {
